@@ -60,10 +60,6 @@ def on_chat_message(msg):
     elif command == '/check':
         config["SEND_PIC"] = True
 
-    # elif command == '/cancel':
-    #     markup = ReplyKeyboardRemove()
-    #     bot.sendMessage(chat_id, 'Huuuumm...', reply_markup=markup)
-
     elif command == '/settings':
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [
@@ -102,53 +98,22 @@ def on_callback_query(msg):
     def choose_module():
         module = query_data[4:]
         config['module'] = module
+        bot.answerCallbackQuery(query_id, 'Running %s' % module)
 
-    cmd_router = {
-        'mod': send_modules,
-    }
 
-    for t in config['registry']:
-        cmd_router['mod_'+t] = choose_module
-
-    if query_data in cmd_router:
-        cmd_func = cmd_router[query_data]
-        cmd_func()
-        return
-
-    # if query_data == 'mod':
-    #     print('[-----------] NAO DEU CERTO')
-    #     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-    #         [
-    #             InlineKeyboardButton(text=mod_name, callback_data="mod_"+mod_name) for mod_name in config['registry']
-    #         ],
-    #         [
-    #             InlineKeyboardButton(text="<- Back", callback_data="back_inline"),
-    #         ]
-    #     ])
-
-    #     global inline_id
-    #     if inline_id:
-    #         msg_idf = telepot.message_identifier(inline_id)
-    #         bot.editMessageReplyMarkup(msg_idf, reply_markup=keyboard)
-    #     else:
-    #         inline_id = bot.sendMessage(from_id, 'CHOOSE MUTHAFUCKA:', reply_markup=keyboard)
-    #         bot.answerCallbackQuery(query_id, 'Choosing modules to run.')
-
-    if query_data == 'conf' :
+    def runtime_configure():
         bot.answerCallbackQuery(query_id, 'callback conf stub')
         return
 
-    # elif query_data.startswith('mod_'):
-    #     module = query_data[4:]
-    #     config['module'] = module
 
-    elif query_data == 'back_inline':
+    def back_inline():
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [
                 InlineKeyboardButton(text="Modules", callback_data="mod"),
                 InlineKeyboardButton(text="Config", callback_data="conf"),
             ]
         ])
+        bot.answerCallbackQuery(query_id, '')
 
         global inline_id
         if inline_id:
@@ -158,10 +123,19 @@ def on_callback_query(msg):
             inline_id = bot.sendMessage(from_id, 'CHOOSE MUTHAFUCKA:', reply_markup=keyboard)
 
 
+    cmd_router = {
+        'mod': send_modules,
+        'conf': runtime_configure,
+        'back_inline': back_inline
+    }
 
+    for t in config['registry']:
+        cmd_router['mod_'+t] = choose_module
 
-
-
+    if query_data in cmd_router:
+        cmd_func = cmd_router[query_data]
+        cmd_func()
+        return
 
 
 

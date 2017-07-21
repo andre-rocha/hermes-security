@@ -40,3 +40,5 @@ def start():
             module.cleanup()
             break
 
+    cap.release()
+    cv2.destroyAllWindows()
