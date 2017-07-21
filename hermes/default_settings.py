@@ -14,3 +14,7 @@ DELTA_THRESH = 5
 MIN_AREA = 5000
 
 CLEAN_FEED = True
+
+MEDIA_PATH = './media'
+
+SUPER_USER = ''
