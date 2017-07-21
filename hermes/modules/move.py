@@ -17,7 +17,7 @@ class MovementModule:
 
     def send_frame(self, path):
         config['SEND_PIC'] = False
-        from .. import botman
+        from hermes import botman
         botman.send_picture(path)
 
     def cleanup(self):

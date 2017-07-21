@@ -2,10 +2,12 @@
 
 if [ -z "$1" ]; then
 
-    python -m hermes hermes/webcam_surveillance
+    python -m hermes
+    #python -m hermes hermes/webcam_surveillance
 
 else
 
-    ipython -m hermes hermes/webcam_surveillance
+    python -m hermes
+    # ipython -m hermes hermes/webcam_surveillance
 
 fi

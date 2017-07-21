@@ -42,6 +42,14 @@ def start():
     print("[+] Bot is listening...")
 
 
+def _get_chat(chat_id):
+    chat_dsc = bot.getChat(chat_id)
+    if chat_dsc['type'] == 'group':
+        return chat_dsc['title']
+    elif chat_dsc['type'] == 'private':
+        return ' '.join( [ chat_dsc.get('first_name', ''), chat_dsc.get('last_name', '') ] )
+
+
 def on_chat_message(msg):
     print(msg)
     content_type, chat_type, chat_id = telepot.glance(msg)
@@ -80,8 +88,8 @@ def on_chat_message(msg):
         inline_id = bot.sendMessage(chat_id, 'Settings', reply_markup=keyboard)
 
     elif command == '/list_invites':
-        kb_list = [InlineKeyboardButton(text=str(u), callback_data="auth_%s" % u) for u in config['INVITE']]
-        kb_auth = [InlineKeyboardButton(text=str(u), callback_data="auth_%s" % u) for u in config['AUTH_USERS'] if u != config['SUPER_USER']]
+        kb_list = [InlineKeyboardButton(text=_get_chat(u), callback_data="auth_%s" % u) for u in config['INVITE']]
+        kb_auth = [InlineKeyboardButton(text=_get_chat(u), callback_data="auth_%s" % u) for u in config['AUTH_USERS'] if u != config['SUPER_USER']]
 
         if len(kb_auth) > 0:
             keyboard_auth = InlineKeyboardMarkup(inline_keyboard=[
@@ -170,11 +178,12 @@ def on_callback_query(msg):
         if query_data.startswith('auth_'):
             if int(query_data[5:]) in config['AUTH_USERS']:
                 config['AUTH_USERS'].remove(int(query_data[5:]))
-                bot.answerCallbackQuery(query_id, '%s authorized.' % query_data[5:])
+                bot.answerCallbackQuery(query_id, '%s unauthorized.' % query_data[5:])
                 if int(query_data[5:]) in config['INVITE']:
                     config['INVITE'].remove(int(query_data[5:]))
             else:
                 config['AUTH_USERS'].append(int(query_data[5:]))
-                bot.answerCallbackQuery(query_id, '%s unauthorized.' % query_data[5:])
+                bot.answerCallbackQuery(query_id, '%s authorized.' % query_data[5:])
+                bot.sendMessage(int(query_data[5:]), 'You were authorized by hermes super user.')
 
 

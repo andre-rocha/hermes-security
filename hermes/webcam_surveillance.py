@@ -11,7 +11,7 @@ from . import config
 #from hermes.detection.movement_module import MovementModule
 import hermes.modules
 
-MovementModule = config["registry"]["move"]
+# MovementModule = config["registry"]["move"]
 
 cap = cv2.VideoCapture(0)
 
