@@ -2,8 +2,8 @@ import datetime
 
 import cv2
 
-from .. import config
-from ..pyimage.tmpimage import TempImage
+from hermes import config
+from hermes.pyimage.tmpimage import TempImage
 from hermes.utils.decorators import register_module
 
 @register_module("face")
@@ -35,7 +35,7 @@ class FaceModule:
 
         faces = self.faceCascade.detectMultiScale(
             gray,
-            scaleFactor=1.2,
+            scaleFactor=1.1,
             minNeighbors=5,
             minSize=(30, 30),
             flags=cv2.CASCADE_SCALE_IMAGE

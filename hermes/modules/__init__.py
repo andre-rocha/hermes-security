@@ -2,7 +2,7 @@ import os
 
 from hermes import config
 
-config['registry'] = {}
+config['REGISTRY'] = {}
 
 for module in os.listdir(os.path.dirname(__file__)):
     if module == '__init__.py' or module[-3:] != '.py':

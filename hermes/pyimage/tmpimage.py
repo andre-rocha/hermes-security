@@ -10,6 +10,9 @@ class TempImage:
             "ext": ext,
         }
 
+    def set_path(self, path):
+        self.path = path
+
     def get_file(self):
         return open(self.path)
 

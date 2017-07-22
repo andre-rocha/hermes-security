@@ -71,14 +71,19 @@ class MovementModule:
                     # write the image to temporary file
                     t = TempImage()
                     cv2.imwrite(t.path, frame)
-                    # TODO : upload picture
-                    if config["SEND_PIC"]:
-                        self.send_frame(t.path)
+                    # TODO : upload picture if set to detecting
+
                     if config.get("CLEAN_FEED", False):
                         t.cleanup()
 
                     self.lastUploaded = timestamp
                     self.motionCounter = 0
+
+        if config['SEND_PIC']:
+            t = TempImage()
+            cv2.imwrite(t.path, frame)
+            self.send_frame(t.path)
+
         else:
             self.motionCounter = 0
 

@@ -5,7 +5,7 @@ def register_module(token):
         def __init__(self, module):
             """
             """
-            config["registry"][token] = module
+            config["REGISTRY"][token] = module
             self.module = module
         def __getattr__(self, name):
             return getattr(self.module, name)

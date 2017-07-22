@@ -11,8 +11,6 @@ from . import config
 #from hermes.detection.movement_module import MovementModule
 import hermes.modules
 
-# MovementModule = config["registry"]["move"]
-
 cap = cv2.VideoCapture(0)
 
 # # Use when writting a video output or create a tmpvideo class for multiple outs
@@ -24,14 +22,14 @@ def start():
     # initialize the average frame, last uploaded timestamp and frame motion counter
     # XXX
     cmod = config.get("module", "none")
-    module = config["registry"][cmod]("security feed")
+    module = config["REGISTRY"][cmod]("security feed")
     while True:
 
         if cmod != config.get("module", "none"):
             module.cleanup()
             cmod = config["module"]
             print("[*] Changing Module to : "+cmod)
-            module = config["registry"][cmod]("security feed")
+            module = config["REGISTRY"][cmod]("security feed")
 
         ret, frame = cap.read()
         module.run(frame)
